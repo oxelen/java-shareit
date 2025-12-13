@@ -1,27 +1,28 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.request.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
+
 /**
- * TODO Sprint add-controllers.
+ * TODO Sprint add-item-requests.
  */
+
 @Data
-@Builder
-public class Item {
+public class ItemRequest {
     @PositiveOrZero(message = "Id должен быть больше или равен 0")
     private Long id;
-    @NotBlank(message = "Название не может быть пустым")
-    private String name;
+
     @NotBlank(message = "Описание не может быть пустым")
     private String description;
-    @NotNull(message = "У вещи должен быть владелец")
-    private User owner;
-    private boolean available;
-    private ItemRequest request;
+
+    @NotNull(message = "Пользователь не может быть null")
+    private User requester;
+
+    @NotNull(message = "Дата создания запроса не может быть пустой")
+    private LocalDateTime created;
 }
