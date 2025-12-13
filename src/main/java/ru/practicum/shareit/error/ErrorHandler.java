@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.ConditionsNotMetException;
 import ru.practicum.shareit.exception.DuplicatedDataException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.NullPathVariableException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка валидации", description.toString());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DuplicatedDataException.class)
     public ErrorResponse handleDuplicatedData(DuplicatedDataException e) {
         return new ErrorResponse("Задублированные данные", e.getMessage());

@@ -22,6 +22,7 @@ public class Item {
     private String description;
     @NotNull(message = "У вещи должен быть владелец")
     private User owner;
-    private boolean available;
+    @NotNull(message = "Available не может быть null")
+    private Boolean available;
     private ItemRequest request;
 }

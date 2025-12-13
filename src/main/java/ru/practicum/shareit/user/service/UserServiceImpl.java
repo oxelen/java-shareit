@@ -17,38 +17,45 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Override
-    public UserDto create(User user) {
+    public User create(User user) {
         if (containsEmail(user)) {
             throw new DuplicatedDataException("Пользователь с email " + user.getEmail() + " уже существует.");
         }
 
-        return UserMapper.toUserDto(userStorage.save(user));
+        return userStorage.save(user);
+        //return UserMapper.toUserDto(userStorage.save(user));
     }
 
     @Override
-    public UserDto update(User newUser) {
-        Long id = newUser.getId();
+    public User update(Long userId, UserDto newUserDto) {
+        User oldUser = getUser(userId);
+        User newUser = UserMapper.toUser(newUserDto, userId);
 
-        String oldEmail = findById(id).getEmail();
+        if (newUser.getName() == null) {
+            newUser.setName(oldUser.getName());
+        }
+        if (newUser.getEmail() == null) {
+            newUser.setEmail(oldUser.getEmail());
+        }
+
+        String oldEmail = oldUser.getEmail();
 
         if (!oldEmail.equals(newUser.getEmail()) && containsEmail(newUser)) {
             throw new DuplicatedDataException("Email " + newUser.getEmail() + " уже занят.");
         }
 
-        return UserMapper.toUserDto(userStorage.update(newUser));
+        return userStorage.update(newUser);
+        //return UserMapper.toUserDto(userStorage.update(newUser));
     }
 
     @Override
-    public List<UserDto> findAll() {
-        return userStorage.findAll().stream().map(UserMapper::toUserDto).toList();
+    public List<User> findAll() {
+        return userStorage.findAll();
     }
 
     @Override
-    public UserDto findById(Long id) {
-        return UserMapper.toUserDto(
-                userStorage.findById(id).orElseThrow(()
-                        -> new NotFoundException("Пользователь с id " + id + " не найден"))
-        );
+    public User findById(Long id) {
+        return getUser(id);
     }
 
     @Override
@@ -56,6 +63,11 @@ public class UserServiceImpl implements UserService {
         findById(id);
 
         return userStorage.delete(id);
+    }
+
+    private User getUser(Long id) {
+        return userStorage.findById(id).orElseThrow(()
+                -> new NotFoundException("Пользователь с id " + id + " не найден"));
     }
 
     private boolean containsEmail(User user) {

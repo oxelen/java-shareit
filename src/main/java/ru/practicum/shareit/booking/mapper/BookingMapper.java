@@ -7,7 +7,7 @@ import ru.practicum.shareit.booking.model.Booking;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookingMapper {
-    public BookingDto toBookingDto(Booking booking) {
+    public static BookingDto toBookingDto(Booking booking) {
         return new BookingDto(
                 booking.getStart(),
                 booking.getEnd(),
