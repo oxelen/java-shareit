@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.util.CustomHttpHeader;
 import ru.practicum.shareit.validation.IdValidator;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto create(@Valid @RequestBody ItemDto itemDto,
-                          @RequestHeader("X-Sharer-User-Id") Long userId) {
+                          @RequestHeader(CustomHttpHeader.USER_ID) Long userId) {
         IdValidator.validateId(userId);
 
         return itemService.create(itemDto, userId);
@@ -29,7 +30,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ItemDto update(@PathVariable("itemId") Long itemId,
                           @RequestBody ItemDto itemDto,
-                          @RequestHeader("X-Sharer-User-Id") Long userId) {
+                          @RequestHeader(CustomHttpHeader.USER_ID) Long userId) {
         IdValidator.validateId(itemId, userId);
 
         return itemService.update(itemId, itemDto, userId);
@@ -43,7 +44,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public List<ItemDto> findAllByOwner(@RequestHeader(CustomHttpHeader.USER_ID) Long ownerId) {
         IdValidator.validateId(ownerId);
 
         return itemService.findAllByOwner(ownerId);
