@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserDto {
+    private Long id;
     @Email(message = "Неверная форма email")
     private String email;
 

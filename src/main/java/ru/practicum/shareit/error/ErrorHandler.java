@@ -1,5 +1,6 @@
 package ru.practicum.shareit.error;
 
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -46,15 +47,15 @@ public class ErrorHandler {
         return new ErrorResponse("Некорректный ввод", e.getMessage());
     }
 
-    /*@ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NullPathVariableException.class)
-    public ErrorResponse handleNullPathVariable(NullPathVariableException e) {
-        return new ErrorResponse("Неверный ввод", e.getMessage());
-    }*/
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ErrorResponse handleNotFound(NotFoundException e) {
         return new ErrorResponse("Данные не найдены", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public ErrorResponse handleValidationException(ValidationException e) {
+        return new ErrorResponse("Ошибка валидации", e.getMessage());
     }
 }
