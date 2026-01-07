@@ -32,8 +32,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto createBooking(CreateBookingDto createBookingDto, Long userId) {
-        LocalDateTime created = LocalDateTime.now();
-
         Long itemId = createBookingDto.getItemId();
         Item bookingItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item с id " + itemId + " не найден"));
@@ -41,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
         User user = getUser(userId);
 
         Booking newBooking = BookingValidator.validateBooking(BookingMapper.toBooking(createBookingDto,
-                bookingItem, user), created);
+                bookingItem, user));
 
         return BookingMapper.toBookingDto(bookingRepository.save(newBooking));
     }

@@ -101,6 +101,7 @@ public class ItemServiceImpl implements ItemService {
 
         if (bookingRepository.findAllByItem(item)
                 .stream()
+                .filter(book -> book.getEnd().isBefore(LocalDateTime.now()))
                 .map(Booking::getBooker)
                 .filter(booker -> booker.equals(user))
                 .toList().isEmpty()) {

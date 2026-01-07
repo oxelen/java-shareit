@@ -6,14 +6,14 @@ import ru.practicum.shareit.booking.model.Booking;
 import java.time.LocalDateTime;
 
 public class BookingValidator {
-    public static Booking validateBooking(Booking booking, LocalDateTime created) {
-        validateBookingTime(booking, created);
+    public static Booking validateBooking(Booking booking) {
+        validateBookingTime(booking);
         validateItem(booking);
 
         return booking;
     }
 
-    public static void validateBookingTime(Booking booking, LocalDateTime created) {
+    public static void validateBookingTime(Booking booking) {
         LocalDateTime start = booking.getStart();
         LocalDateTime end = booking.getEnd();
 
@@ -22,11 +22,11 @@ public class BookingValidator {
                     + " не может быть позже окончания бронирования " + end);
         }
 
-        if (start.isBefore(created)) {
+        if (start.isBefore(LocalDateTime.now())) {
             throw new ValidationException("Начало бронирования не может быть раньше текущего времени");
         }
 
-        if (end.isBefore(created)) {
+        if (end.isBefore(LocalDateTime.now())) {
             throw new ValidationException(("Конец бронирования не может быть раньше текущего времени"));
         }
     }

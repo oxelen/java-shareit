@@ -28,12 +28,12 @@ public class Booking {
     @Column(name = "booking_end")
     private LocalDateTime end;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "item_id")
     @NotNull(message = "Предмет не может быть null")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "booker_id")
     @NotNull(message = "Пользователь не может быть null")
     private User booker;
