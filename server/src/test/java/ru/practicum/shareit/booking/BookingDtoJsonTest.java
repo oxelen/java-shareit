@@ -22,8 +22,8 @@ public class BookingDtoJsonTest {
     private final JacksonTester<CreateBookingDto> jsonCreateDto;
     private final JacksonTester<BookingDto> jsonDto;
 
-    private final LocalDateTime TEST_START = LocalDateTime.of(2026, 1, 1, 0, 0, 0);
-    private final LocalDateTime TEST_END = LocalDateTime.of(2026, 1, 2, 0, 0, 0);
+    private static final LocalDateTime TEST_START = LocalDateTime.of(2026, 1, 1, 0, 0, 0);
+    private static final LocalDateTime TEST_END = LocalDateTime.of(2026, 1, 2, 0, 0, 0);
 
     @Test
     public void createBookingDtoTest() throws Exception {

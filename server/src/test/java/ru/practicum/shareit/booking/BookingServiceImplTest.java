@@ -39,8 +39,8 @@ public class BookingServiceImplTest {
     private final BookingService bookingService;
     private final UserService userService;
     private final ItemService itemService;
-    private final LocalDateTime TEST_START = LocalDateTime.of(2026, 1, 1, 0, 0, 0);
-    private final LocalDateTime TEST_END = LocalDateTime.of(2026, 1, 2, 0, 0, 0);
+    private static final LocalDateTime TEST_START = LocalDateTime.of(2026, 1, 1, 0, 0, 0);
+    private static final LocalDateTime TEST_END = LocalDateTime.of(2026, 1, 2, 0, 0, 0);
     private Long userId;
     private Long itemId;
     private Long bookerId;
