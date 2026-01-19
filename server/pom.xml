@@ -168,6 +168,11 @@
                     <version>0.8.12</version>
                     <configuration>
                         <output>file</output>
+                        <excludes>
+                            <exclude>**/ShareItServer.class</exclude>
+                            <exclude>**/util/**</exclude>
+                            <exclude>**/Q*</exclude>
+                        </excludes>
                     </configuration>
                     <executions>
                         <execution>
@@ -227,11 +232,6 @@
                             <goals>
                                 <goal>report</goal>
                             </goals>
-                            <configuration>
-                                <excludes>
-                                    <exclude>**/Q*</exclude>
-                                </excludes>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
