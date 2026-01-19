@@ -3,11 +3,13 @@ package ru.practicum.shareit.request;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.CreateItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -60,6 +62,11 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
+    public void handleUserNotFound() {
+        Assertions.assertThrows(NotFoundException.class, () -> service.create(new CreateItemRequestDto(), 1L));
+    }
+
+    @Test
     public void getItemRequestByUserTest() {
         ItemRequest request = createDefaultItemRequest();
         List<ItemRequestDto> res = service.getItemRequestsByUser(userId);
@@ -79,7 +86,7 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
-    public void getItemRequestByIdTEst() {
+    public void getItemRequestByIdTest() {
         ItemRequest req = createDefaultItemRequest();
         Long reqId = req.getId();
 
@@ -87,6 +94,11 @@ public class ItemRequestServiceImplTest {
 
         assertThat(res.getId(), equalTo(reqId));
         assertThat(res.getDescription(), equalTo(req.getDescription()));
+    }
+
+    @Test
+    public void handleNotFound() {
+        Assertions.assertThrows(NotFoundException.class, () -> service.getItemRequestById(1L));
     }
 
     private ItemRequest createDefaultItemRequest() {

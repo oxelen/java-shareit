@@ -21,6 +21,8 @@ import ru.practicum.shareit.item.dto.RequestItemDto;
 import ru.practicum.shareit.item.dto.ResponseItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.request.dto.CreateItemRequestDto;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserRequestDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -41,6 +43,7 @@ public class ItemServiceImplTest {
     private final ItemService service;
     private final UserService userService;
     private final BookingService bookingService;
+    private final ItemRequestService itemRequestService;
 
     private Long userId;
 
@@ -96,6 +99,32 @@ public class ItemServiceImplTest {
         );
 
         Assertions.assertThrows(NotFoundException.class, () -> service.create(createDto, userId));
+    }
+
+    @Test
+    public void createItemWithRequestTest() {
+        UserRequestDto userRequestDto = new UserRequestDto();
+        userRequestDto.setName("testUserName");
+        userRequestDto.setEmail("otherEmail");
+
+        Long requesterId = userService.create(userRequestDto).getId();
+        CreateItemRequestDto createItemRequestDto = new CreateItemRequestDto();
+        createItemRequestDto.setDescription("testDescription");
+        Long requestId = itemRequestService.create(createItemRequestDto, requesterId).getId();
+
+        RequestItemDto createDto = new RequestItemDto(
+                "testName",
+                "testDescription",
+                true,
+                requestId
+        );
+
+        service.create(createDto, userId);
+        TypedQuery<Item> query = em.createQuery("select i from Item i where i.name = :name", Item.class);
+        Item res = query.setParameter("name", createDto.getName()).getSingleResult();
+
+        assertThat(res.getRequest(), notNullValue());
+        assertThat(res.getRequest().getId(), equalTo(requestId));
     }
 
     @Test
@@ -289,7 +318,8 @@ public class ItemServiceImplTest {
         TypedQuery<Item> query = em.createQuery("select i from Item i where i.name = :name", Item.class);
         Item item = query.setParameter("name", createDto.getName()).getSingleResult();
         Long itemId = item.getId();
-        createAndApproveBooking(itemId);
+        createLastBooking(itemId);
+        createNextBooking(itemId);
 
         List<OwnerItemDto> res = service.findAllByOwner(userId);
         assertThat(res.size(), equalTo(1));
@@ -299,6 +329,10 @@ public class ItemServiceImplTest {
         assertThat(resItem.getName(), equalTo(createDto.getName()));
         assertThat(resItem.getDescription(), equalTo(createDto.getDescription()));
         assertThat(resItem.getAvailable(), equalTo(createDto.getAvailable()));
+        assertThat(resItem.getLastStart(), notNullValue());
+        assertThat(resItem.getLastEnd(), notNullValue());
+        assertThat(resItem.getNextStart(), notNullValue());
+        assertThat(resItem.getNextEnd(), notNullValue());
     }
 
     @Test
@@ -412,5 +446,39 @@ public class ItemServiceImplTest {
         bookingService.approve(userId, bookId, true);
 
         return booker;
+    }
+
+    private void createLastBooking(Long itemId) {
+        UserRequestDto userRequestDto = new UserRequestDto();
+        userRequestDto.setName("lastBookerName");
+        userRequestDto.setEmail("lastBookerEmail");
+        User booker = userService.create(userRequestDto);
+
+        CreateBookingDto bookingDto = new CreateBookingDto();
+        bookingDto.setStart(LocalDateTime.now().minusDays(2));
+        bookingDto.setEnd(LocalDateTime.now().minusDays(1));
+        bookingDto.setItemId(itemId);
+
+        BookingDto book = bookingService.createBooking(bookingDto, booker.getId());
+        Long bookId = book.getId();
+
+        bookingService.approve(userId, bookId, true);
+    }
+
+    private void createNextBooking(Long itemId) {
+        UserRequestDto userRequestDto = new UserRequestDto();
+        userRequestDto.setName("nextBookerName");
+        userRequestDto.setEmail("nextBookerEmail");
+        User booker = userService.create(userRequestDto);
+
+        CreateBookingDto bookingDto = new CreateBookingDto();
+        bookingDto.setStart(LocalDateTime.now().plusDays(1));
+        bookingDto.setEnd(LocalDateTime.now().plusDays(2));
+        bookingDto.setItemId(itemId);
+
+        BookingDto book = bookingService.createBooking(bookingDto, booker.getId());
+        Long bookId = book.getId();
+
+        bookingService.approve(userId, bookId, true);
     }
 }

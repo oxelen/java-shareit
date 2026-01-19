@@ -93,6 +93,16 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    public void handleNotFoundBooker() {
+        CreateBookingDto createBookingDto = new CreateBookingDto();
+        createBookingDto.setStart(TEST_START);
+        createBookingDto.setEnd(TEST_END);
+        createBookingDto.setItemId(itemId);
+        Assertions.assertThrows(NotFoundException.class, ()
+                -> bookingService.createBooking(createBookingDto, 10L));
+    }
+
+    @Test
     public void handleItemIsNotAvailable() {
         RequestItemDto requestItemDto = new RequestItemDto("testItemName",
                 "testItemDescription",
@@ -124,11 +134,27 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void findBookingTest() {
+    public void handleBookingNotFound() {
+        Assertions.assertThrows(NotFoundException.class, ()
+                -> bookingService.approve(userId, 1L, true));
+    }
+
+    @Test
+    public void findBookingTestByBooker() {
         Booking book = createDefaultBooking();
         Long bookId = book.getId();
 
         BookingDto res = bookingService.findBooking(bookId, bookerId);
+
+        assertThat(res.getId(), equalTo(bookId));
+    }
+
+    @Test
+    public void findBookingTestByOwner() {
+        Booking book = createDefaultBooking();
+        Long bookId = book.getId();
+
+        BookingDto res = bookingService.findBooking(bookId, userId);
 
         assertThat(res.getId(), equalTo(bookId));
     }
