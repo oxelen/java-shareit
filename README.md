@@ -1,3 +1,8 @@
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Docker](https://img.shields.io/badge/Docker-Container-blue)
+![Maven](https://img.shields.io/badge/Maven-Build-red)
 # ShareIt API
 
 Backend service for a sharing platform that allows users to lend and borrow items.
@@ -5,27 +10,27 @@ Users can add items, request to borrow them for a specific time period, and mana
 
 The application implements a RESTful API built with Spring Boot, JPA, and PostgreSQL.
 
-# Features
+## Features
 
-## Users
+### Users
 - Create and manage users
 - View user information
 
-## Items
+### Items
 - Add items available for sharing
 - Update item details
 - Search items by text
 
-## Bookings
+### Bookings
 - Create booking requests
 - Approve or reject bookings
 - View current and past bookings
 
-## Requests
+### Requests
 - Create requests for items not yet available in the system
 - View requests from other users
 
-# Tech Stack
+## Tech Stack
 
 - Java
 - Spring Boot
@@ -54,8 +59,8 @@ Each layer has its own responsibility:
 - Repository — database access
 - DTO — data transfer objects
 
-# Example Endpoints
-## Items
+## Example Endpoints
+### Items
 ``` java
 GET /items
 ```
@@ -69,7 +74,7 @@ GET /items/search?text=drill
 ```
 Search items by text.
 
-## Bookings
+### Bookings
 ``` java
 POST /bookings
 ```
@@ -79,7 +84,7 @@ PATCH /bookings/{bookingId}?approved=true
 ```
 Approve or reject booking.
 
-# Database
+## Database
 
 The application uses PostgreSQL with entities such as:
 - Users
@@ -88,7 +93,7 @@ The application uses PostgreSQL with entities such as:
 - Item Requests
 Relationships are managed using JPA / Hibernate.
 
-# How to Run
+## How to Run
 
 Clone the repository
 ``` bash
